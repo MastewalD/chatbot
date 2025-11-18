@@ -1,0 +1,18 @@
+[
+    {
+        "question": "What are your working hours?",
+        "answer": "Our working hours are Monday to Friday, 9 AM to 6 PM."
+    },
+     {
+        "question": "Hello",
+        "answer": "selam endet neh/nesh."
+    },
+    {
+        "question": "Where are you located?",
+        "answer": "We are located at 123 Main Street, Addis Ababa."
+    },
+    {
+        "question": "How can I contact support?",
+        "answer": "You can contact support via email at support@example.com."
+    }
+]

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Chatbot</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 50px; }
+        #chatbox { border: 1px solid #ccc; padding: 10px; width: 400px; height: 300px; overflow-y: scroll; }
+        #userInput { width: 300px; }
+        button { padding: 5px 10px; }
+        .user { color: blue; }
+        .bot { color: green; }
+    </style>
+</head>
+<body>
+    <h2>Simple Chatbot</h2>
+    <div id="chatbox"></div>
+    <input type="text" id="userInput" placeholder="Type your message...">
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        function sendMessage() {
+            const input = document.getElementById('userInput').value;
+            if(!input) return;
+
+            const chatbox = document.getElementById('chatbox');
+            chatbox.innerHTML += `<div class="user"><b>You:</b> ${input}</div>`;
+
+            fetch(`/get?msg=${encodeURIComponent(input)}`)
+                .then(response => response.text())
+                .then(data => {
+                    chatbox.innerHTML += `<div class="bot"><b>Bot:</b> ${data}</div>`;
+                    chatbox.scrollTop = chatbox.scrollHeight;
+                });
+
+            document.getElementById('userInput').value = '';
+        }
+    </script>
+</body>
+</html>
