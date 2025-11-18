@@ -1,0 +1,24 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": ["hello", "hi", "hey", "good morning"],
+      "responses": ["Hello! How can I assist you today?"]
+    },
+    {
+      "tag": "working_hours",
+      "patterns": ["when are you open", "working hours", "what time do you open"],
+      "responses": ["We are open from 9 AM to 6 PM, Monday to Friday."]
+    },
+    {
+      "tag": "pricing",
+      "patterns": ["how much does it cost", "price", "pricing details"],
+      "responses": ["Please visit our pricing page for detailed cost information."]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": ["bye", "see you", "good night"],
+      "responses": ["Goodbye! Have a wonderful day!"]
+    }
+  ]
+}
