@@ -1,35 +1,38 @@
 import json
 from flask import Flask, request, render_template
-from nltk.tokenize import word_tokenize
-import nltk
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
-nltk.download('punkt')
-
+# Load FAQ data
 with open("faq.json") as f:
     faq_data = json.load(f)
 
+# Extract all FAQ questions
+questions = [item["question"] for item in faq_data]
+
+# Initialize TF-IDF model
+vectorizer = TfidfVectorizer()
+question_vectors = vectorizer.fit_transform(questions)
+
 def find_answer(user_input):
-    tokens = word_tokenize(user_input.lower())
-    best_match = None
-    best_percentage = 0  
+    # Convert user question into TF-IDF vector
+    user_vector = vectorizer.transform([user_input])
 
-    for item in faq_data:
-        question_tokens = word_tokenize(item["question"].lower())
-        matches = sum(1 for word in question_tokens if word in tokens)
-        match_percentage = matches / len(question_tokens)
+    # Calculate similarity with all FAQ questions
+    similarities = cosine_similarity(user_vector, question_vectors)[0]
 
-        print("Matched:", match_percentage, "|", item["question"])
+    # Find highest scoring FAQ question
+    best_match_index = similarities.argmax()
+    best_score = similarities[best_match_index]
 
-        # Keep the best matching question
-        if match_percentage > best_percentage:
-            best_percentage = match_percentage
-            best_match = item
+    # Debug print (optional)
+    print("Similarity score:", best_score)
 
-    # After checking ALL questions
-    if best_percentage >= 0.8:
-        return best_match["answer"]
+    # Threshold: accept only if confidence is high enough
+    if best_score >= 0.3:
+        return faq_data[best_match_index]["answer"]
     else:
-        return "Sorry, I don't understand your question."
+        return "Sorry, I didn’t understand. Can you rephrase it?"
     
 
 app = Flask(__name__)
@@ -40,9 +43,9 @@ def home():
 
 @app.route("/get")
 def get_bot_response():
-    user_input = request.args.get('msg', '')
+    user_input = request.args.get("msg", "")
     if not user_input:
-        return "Please provide a message."
+        return "Please type something."
     return find_answer(user_input)
 
 if __name__ == "__main__":
